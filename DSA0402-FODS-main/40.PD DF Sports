@@ -1,0 +1,30 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+file_name = "C:\\FODS\\40data.csv"  
+data = pd.read_csv(file_name)
+
+top_goals_players = data.nlargest(5, 'Goals_Scored')
+top_salary_players = data.nlargest(5, 'Weekly_Salary')
+
+average_age = data['Age'].mean()
+
+above_average_age_players = data[data['Age'] > average_age]['Name']
+
+position_counts = data['Position'].value_counts()
+position_counts.plot(kind='bar', figsize=(8, 6))
+plt.title("Distribution of Players by Position")
+plt.xlabel("Position")
+plt.ylabel("Number of Players")
+plt.xticks(rotation=45)
+plt.show()
+
+print("Top 5 Players with Highest Goals Scored:")
+print(top_goals_players)
+
+print("\nTop 5 Players with Highest Salaries:")
+print(top_salary_players)
+
+print("\nAverage Age of Players:", average_age)
+
+print("\nPlayers Above Average Age:")
+print(above_average_age_players)

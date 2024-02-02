@@ -1,0 +1,62 @@
+import pandas as pd
+import numpy as np
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_squared_error, r2_score
+import matplotlib.pyplot as plt
+
+# Generate a synthetic dataset (replace this with loading your actual dataset)
+np.random.seed(0)
+n_samples = 100
+X = np.random.rand(n_samples, 3)  # Features: Engine Size, Horsepower, Fuel Efficiency
+coefficients = np.array([5000, 100, -8000])  # Coefficients for the features
+intercept = 10000
+y = X.dot(coefficients) + intercept + np.random.normal(0, 2000, n_samples)  # Adding noise
+
+# Create a DataFrame
+data = pd.DataFrame(data=X, columns=['Engine Size', 'Horsepower', 'Fuel Efficiency'])
+data['Price'] = y
+
+# Select features and target variable
+selected_features = ['Engine Size', 'Horsepower', 'Fuel Efficiency']
+X = data[selected_features]
+y = data['Price']
+
+# Split the dataset into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Initialize the linear regression model
+model = LinearRegression()
+
+# Fit the model to the training data
+model.fit(X_train, y_train)
+
+# Make predictions on the test data
+y_pred = model.predict(X_test)
+
+# Evaluate the model
+mse = mean_squared_error(y_test, y_pred)
+r2 = r2_score(y_test, y_pred)
+
+print(f"Mean Squared Error: {mse}")
+print(f"R-squared: {r2}")
+
+# Get the coefficients and intercept
+coefficients = model.coef_
+intercept = model.intercept_
+
+print("Coefficients:", coefficients)
+print("Intercept:", intercept)
+
+# Plot actual vs. predicted prices
+plt.scatter(y_test, y_pred)
+plt.xlabel("Actual Price")
+plt.ylabel("Predicted Price")
+plt.title("Actual vs. Predicted Car Prices")
+plt.show()
+
+# Display the most influential factors affecting car prices
+feature_importance = pd.Series(coefficients, index=selected_features)
+sorted_importance = feature_importance.abs().sort_values(ascending=False)
+print("Most Influential Factors:")
+print(sorted_importance)

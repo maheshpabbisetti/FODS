@@ -1,0 +1,8 @@
+import pandas as pd 
+import numpy as np  
+arr=pd.read_csv("C:\FODS\students.csv",usecols=["Maths","Science","English","History"]) 
+avg_score=np.mean(arr,axis=0) 
+print(avg_score) 
+highest_score=np.argmax(avg_score) 
+sub=['Maths','Science','english','history'] 
+print("Highest score sub:",sub[highest_score],'=',max(avg_score)) 

@@ -1,0 +1,45 @@
+import pandas as pd
+import string
+from collections import Counter
+import matplotlib.pyplot as plt
+
+df = pd.read_csv("C:\FODS\customer_feedback.csv")
+
+translator = str.maketrans("", "", string.punctuation)
+
+def preprocess_text(text):
+    text = text.lower()
+    text = text.translate(translator)
+    tokens = text.split()
+    return [token for token in tokens if token not in stopwords]
+
+preprocessed_tokens = []
+stopwords = set(open("C:\FODS\customer_feedback.csv").read().split("\n"))  
+
+for feedback in df["Feedback"]:
+    cleaned_tokens = preprocess_text(feedback)
+    preprocessed_tokens.extend(cleaned_tokens)
+
+word_freq = Counter(preprocessed_tokens)
+
+try:
+    n = int(input("Enter the number of top words to display: "))
+except ValueError:
+    print("Invalid input. Using default value of 10.")
+    n = 10
+
+print(f"Top {n} Most Frequent Words:")
+for word, freq in word_freq.most_common(n):
+    print(f"{word}: {freq}")
+
+top_words = [word for word, _ in word_freq.most_common(n)]
+top_word_freq = [word_freq[word] for word in top_words]
+
+plt.figure(figsize=(12, 6))
+plt.bar(top_words, top_word_freq)
+plt.xlabel("Words")
+plt.ylabel("Frequency")
+plt.title(f"Top {n} Most Frequent Words in Customer Feedback")
+plt.xticks(rotation=45)
+plt.tight_layout()
+plt.show()

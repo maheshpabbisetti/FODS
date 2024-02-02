@@ -1,0 +1,17 @@
+import pandas as pd
+import numpy as np
+data = pd.read_csv('C:\FODS\stock_data.csv')
+data['Price Change'] = data['Close Price'].diff()
+mean_change = data['Price Change'].mean()
+std_dev_change = data['Price Change'].std()
+coefficient_of_variation = std_dev_change / mean_change
+if coefficient_of_variation < 0.1:
+    insight = "The stock has relatively low variability in price."
+elif coefficient_of_variation < 0.3:
+    insight = "The stock has moderate variability in price."
+else:
+    insight = "The stock has high variability in price."
+    print("Mean Price Change:", mean_change)
+print("Standard Deviation of Price Change:", std_dev_change)
+print("Coefficient of Variation:", coefficient_of_variation)
+print("Insight:", insight)

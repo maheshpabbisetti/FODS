@@ -1,0 +1,7 @@
+import numpy as np 
+bed_rooms=np.array([2,3,4,5,6]) 
+sf=np.array([23,34,45,56,67]) 
+sp=np.array([200,300,400,500,600]) 
+average_sp=sp[bed_rooms>4] 
+average_price=np.mean(average_sp)  
+print('the total price of the beds',average_price)  

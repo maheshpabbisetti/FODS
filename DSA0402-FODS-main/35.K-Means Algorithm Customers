@@ -1,0 +1,23 @@
+import pandas as pd
+from sklearn.cluster import KMeans
+from sklearn.preprocessing import StandardScaler
+import matplotlib.pyplot as plt
+data = {
+    'CustomerID': [101, 102, 103, 104, 105, 106, 107, 108, 109, 110],
+    'AmountSpent': [500, 100, 1200, 800, 150, 3000, 2000, 700, 900, 400],
+    'Frequency': [10, 5, 15, 12, 2, 20, 18, 8, 10, 6]
+}
+df = pd.DataFrame(data)
+X = df[['AmountSpent', 'Frequency']]
+scaler = StandardScaler()
+X_scaled = scaler.fit_transform(X)
+num_clusters = 3
+kmeans = KMeans(n_clusters=num_clusters, random_state=42)
+kmeans.fit(X_scaled)
+df['Cluster'] = kmeans.labels_
+plt.scatter(df['AmountSpent'], df['Frequency'], c=df['Cluster'], cmap='rainbow')
+plt.xlabel('Amount Spent')
+plt.ylabel('Frequency')
+plt.title('Customer Segmentation')
+plt.show()
+print(df)
