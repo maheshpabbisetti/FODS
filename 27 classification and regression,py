@@ -1,0 +1,43 @@
+import pandas as pd
+from sklearn.tree import DecisionTreeRegressor, export_text
+
+# Load your car dataset (replace 'your_car_data.csv' with your actual data file)
+car_data = pd.read_csv('your_car_data.csv')
+
+# Display the first few rows of the DataFrame
+print(car_data.head())
+
+# Select relevant features and target variable
+features = car_data[['mileage', 'age', 'brand', 'engine_type']]
+target = car_data['price']
+
+# Convert categorical features to numerical using one-hot encoding
+features_encoded = pd.get_dummies(features, columns=['brand', 'engine_type'], drop_first=True)
+
+# Get user input for new car features
+new_car_features = {}
+new_car_features['mileage'] = float(input("Enter the mileage of the new car: "))
+new_car_features['age'] = int(input("Enter the age of the new car: "))
+new_car_features['brand'] = input("Enter the brand of the new car: ")
+new_car_features['engine_type'] = input("Enter the engine type of the new car: ")
+
+# Create a Decision Tree Regressor model
+model = DecisionTreeRegressor(random_state=42)
+model.fit(features_encoded, target)
+
+# Convert user input to a DataFrame
+new_car_df = pd.DataFrame([new_car_features])
+
+# Encode the categorical features of the new car
+new_car_encoded = pd.get_dummies(new_car_df, columns=['brand', 'engine_type'], drop_first=True)
+
+# Predict the price of the new car
+predicted_price = model.predict(new_car_encoded)[0]
+
+# Display the predicted price
+print(f"The predicted price of the new car is: ${predicted_price:.2f}")
+
+# Display the decision path
+tree_rules = export_text(model, feature_names=list(new_car_encoded.columns))
+print("Decision Path:")
+print(tree_rules)
